@@ -112,8 +112,11 @@ def mb_sparsify(adjacency_matrix):
             g.remove_edge(from_node, to_node)
     return rwx.adjacency_matrix(g)
 
-def thresh_sparsify(adjacency_matrix, threshold):
+def thresh_sparsify(adjacency_matrix, approx_num_edges_wanted):
     a = adjacency_matrix.copy() 
+    temp = a.flatten()
+    temp = temp[temp != 0]
+    threshold = np.percentile(temp, 100 * approx_num_edges_wanted / (len(temp)/2))
     a[a >  threshold] = 0
     return a
 
@@ -131,4 +134,6 @@ def spectral_sparsify(adjacency_matrix:np.ndarray) -> np.ndarray:
     g = pygsp.graphs.Graph(adjacency_matrix)
     sparse_g = pygsp.reduction.graph_sparsify(g, epsilon=0.6)
     return sparse_g.W
+
+
  
