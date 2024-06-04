@@ -1,3 +1,9 @@
+# Ignoring the data downloads
+data/
+
+# Ignoring the results 
+results/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
