@@ -4,6 +4,7 @@ import networkx as nx
 import rustworkx as rwx
 import random
 import torch
+import pygsp
 
 def add_weights_to_edges(G, method: str):
     """
@@ -110,3 +111,24 @@ def mb_sparsify(adjacency_matrix):
         if (apsp_dict[from_node][to_node] < g.get_edge_data(from_node, to_node)):
             g.remove_edge(from_node, to_node)
     return rwx.adjacency_matrix(g)
+
+def thresh_sparsify(adjacency_matrix, threshold):
+    a = adjacency_matrix.copy() 
+    a[a >  threshold] = 0
+    return a
+
+def spectral_sparsify(adjacency_matrix:np.ndarray) -> np.ndarray:
+    """
+    Takes a numpy array, adjacency matrix as an input and returns the adjacency matrix
+    of the spectral sparsified version of the corresponding graph using the Spielman and Srivastava sparsification algorithm.
+
+    Args:
+        adjacency_matrix (numpy.ndarray): The input adjacency matrix of the graph.
+
+    Returns:
+        numpy.ndarray: The adjacency matrix of the spectral sparsified graph.
+    """
+    g = pygsp.graphs.Graph(adjacency_matrix)
+    sparse_g = pygsp.reduction.graph_sparsify(g, epsilon=0.6)
+    return sparse_g.W
+ 
