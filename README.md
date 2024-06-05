@@ -1,1 +1,1 @@
-# SparseGNN
+# SparseGCN
