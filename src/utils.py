@@ -16,3 +16,9 @@ def get_edge_idx_from_adj_matrix(adj_matrix: np.ndarray):
     
 def get_num_edges_from_adj_matrix(adjacency_matrix):
     return int(np.count_nonzero(adjacency_matrix, axis = 1).sum() / 2)
+
+def get_similarity_matrix_from_dist_matrix(dist_matrix, similarity_weight_matrix, is_unweighted):
+    if is_unweighted:
+        return (dist_matrix != 0).astype(int)
+    return np.multiply(similarity_weight_matrix, (dist_matrix != 0).astype(int))
+    

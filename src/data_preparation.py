@@ -135,5 +135,40 @@ def spectral_sparsify(adjacency_matrix:np.ndarray) -> np.ndarray:
     sparse_g = pygsp.reduction.graph_sparsify(g, epsilon=0.6)
     return sparse_g.W
 
+def random_sparsify(adjacency_matrix, desired_edges):
+    """
+    Sparsifies a graph given as an adjacency matrix to have approximately the desired number of edges.
+    
+    Parameters:
+    adj_matrix (numpy.ndarray): The adjacency matrix of the graph.
+    desired_edges (int): The desired number of edges in the sparsified graph.
+    
+    Returns:
+    numpy.ndarray: The sparsified adjacency matrix.
+    """
+    n = adjacency_matrix.shape[0]
+    
+    # Get the list of all edges in the graph
+    edges = [(i, j) for i in range(n) for j in range(i+1, n) if adjacency_matrix[i, j] > 0]
+    
+    # If the number of edges in the original graph is less than or equal to the desired number of edges, return the original graph
+    if len(edges) <= desired_edges:
+        return adjacency_matrix
+
+    # Randomly shuffle the edges
+    random.shuffle(edges)
+    
+    # Select the desired number of edges
+    selected_edges = edges[:desired_edges]
+    
+    # Create a new adjacency matrix with the selected edges
+    new_adj_matrix = np.zeros_like(adjacency_matrix)
+    for i, j in selected_edges:
+        new_adj_matrix[i, j] = adjacency_matrix[i, j]
+        new_adj_matrix[j, i] = adjacency_matrix[i, j]
+    
+    return new_adj_matrix
+    
+    
 
  
